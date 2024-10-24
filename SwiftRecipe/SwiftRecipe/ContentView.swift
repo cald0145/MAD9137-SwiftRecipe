@@ -17,14 +17,18 @@ struct ContentView: View {
             // scroll list with for each to iterate over all recipes,
             List {
                 ForEach(viewModel.recipes) { recipe in
-                    // vertical stack with leading alignment
-                    VStack(alignment: .leading) {
-                        Text(recipe.title)
-                            .font(.headline)
-                        // recipe description in subheadline
-                        Text(recipe.description)
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
+                    // recipes in nav link
+                    NavigationLink(destination: RecipeDetailView(recipe: recipe, viewModel: viewModel)) {
+                        // vertical stack with leading alignment
+                        VStack(alignment: .leading) {
+                            Text(recipe.title)
+                                .font(.headline)
+                            // recipe description in subheadline
+                            Text(recipe.description)
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
+                        .padding(.vertical, 8)
                     }
                 }
                 .onDelete(perform: viewModel.deleteRecipe)
