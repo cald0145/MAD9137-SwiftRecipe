@@ -11,6 +11,9 @@ struct ContentView: View {
     // remember: stateobject creates lifecycle of the view model, will refresh for changes
     @StateObject private var viewModel = RecipeViewModel()
 
+    // state variable for the display of the add recipe sheet
+    @State private var showingAddRecipe = false
+
     var body: some View {
         // navigation bar
         NavigationView {
@@ -38,15 +41,17 @@ struct ContentView: View {
             .toolbar {
                 // adding a add button to trailing side of nav bar
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    // add recipe button function,
-
-                    // add recipe screen later!!!!! WIP
+                    // add recipe button function
                     Button(action: {
-                        viewModel.addRecipe(Recipe.testRecipe())
+                        showingAddRecipe = true
                     }) {
                         Image(systemName: "plus")
                     }
                 }
+            }
+            // showing the add recipe view as a sheet when showingAddRecipe is true
+            .sheet(isPresented: $showingAddRecipe) {
+                AddRecipeView(viewModel: viewModel)
             }
         }
     }

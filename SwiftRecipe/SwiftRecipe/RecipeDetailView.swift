@@ -32,7 +32,7 @@ struct RecipeDetailView: View {
                     .padding(.bottom, 10)
                 // ingredients section, using vertical stack for header and list
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("ingredients")
+                    Text("Ingredients")
                         .font(.title2)
                         .bold()
                     // iterating through ingredients array and adding bullet point for each
@@ -42,15 +42,15 @@ struct RecipeDetailView: View {
                     }
                 }
                 .padding(.bottom, 10)
-                // instructions section
+                // steps section
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("instructions")
+                    Text("Steps")
                         .font(.title2)
                         .bold()
                     // iterate through instructions array with index, enumerated() gives both the index and instruction
                     // index + 1 used to start numbering from 1 instead of 0!!
-                    ForEach(Array(recipe.instructions.enumerated()), id: \.element) { index, instruction in
-                        Text("\(index + 1). \(instruction)")
+                    ForEach(Array(recipe.steps.enumerated()), id: \.element) { index, step in
+                        Text("\(index + 1). \(step)")
                             .padding(.leading)
                     }
                 }

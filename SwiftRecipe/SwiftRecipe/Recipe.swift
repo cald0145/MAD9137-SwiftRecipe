@@ -13,7 +13,7 @@ struct Recipe: Identifiable {
     var title: String
     var description: String
     var ingredients: [String]
-    var instructions: [String]
+    var steps: [String]
     var date: Date
 
     // static method to create a recipe
@@ -27,7 +27,7 @@ struct Recipe: Identifiable {
                 "2 Slices of American cheese",
                 "1-2 tbsp of butter",
             ],
-            instructions: [
+            steps: [
                 "Butter one side of each bread slice.",
                 "Place one slice, butter-side down, on a pan over medium heat.",
                 "Add cheese slices on top of the bread.",
