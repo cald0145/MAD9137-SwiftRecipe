@@ -8,13 +8,33 @@
 import Foundation
 
 struct Recipe: Identifiable {
-    //all properties for each recipe
-    let id = UUID()
+    // all properties for each recipe
+    var id = UUID()
     var title: String
     var description: String
     var ingredients: [String]
     var steps: [String]
     var date: Date
+
+    // default initializer that creates a new UUID
+    init(title: String, description: String, ingredients: [String], steps: [String], date: Date) {
+        self.id = UUID()
+        self.title = title
+        self.description = description
+        self.ingredients = ingredients
+        self.steps = steps
+        self.date = date
+    }
+
+    // special initializer for updating existing recipes that takes an ID
+    init(id: UUID, title: String, description: String, ingredients: [String], steps: [String], date: Date) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.ingredients = ingredients
+        self.steps = steps
+        self.date = date
+    }
 
     // static method to create a recipe
 

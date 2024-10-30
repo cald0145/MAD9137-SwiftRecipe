@@ -15,9 +15,7 @@ class RecipeViewModel: ObservableObject {
 
     // init sets up state of the view model
     // adding test recipe grilled cheese :^)
-    init() {
-        recipes.append(Recipe.testRecipe())
-    }
+
 
     // WIP, adds new recipe parameter
     func addRecipe(_ recipe: Recipe) {
@@ -33,6 +31,9 @@ class RecipeViewModel: ObservableObject {
     func updateRecipe(_ updatedRecipe: Recipe) {
         // finding index of the recipe with matching id
         if let index = recipes.firstIndex(where: { $0.id == updatedRecipe.id }) {
+            print("updating recipe index: \(index)")
+            print("old recipe: \(recipes[index])")
+            print("new recipe: \(updatedRecipe)")
             // replacing old recipe with updated one
             recipes[index] = updatedRecipe
         }

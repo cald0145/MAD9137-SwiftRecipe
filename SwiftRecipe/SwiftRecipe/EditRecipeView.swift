@@ -21,7 +21,6 @@ struct EditRecipeView: View {
     
     // state var hold the edited recipe
     // init with existing recipe data
-    @State private var id: UUID
     @State private var title: String
     @State private var description: String
     @State private var currentIngredient = ""
@@ -137,6 +136,8 @@ struct EditRecipeView: View {
     
     // save the edited recipe
     private func saveRecipe() {
+        print("saving recipe")
+        print("original id: \(recipe.id)")
         // creating updated recipe with new data
         let updatedRecipe = Recipe(
             id: recipe.id,
@@ -146,7 +147,7 @@ struct EditRecipeView: View {
             steps: steps,
             date: recipe.date
         )
-        
+        print("new recipe id: \(updatedRecipe.id)")
         // update recipe in the view model
         viewModel.updateRecipe(updatedRecipe)
         dismiss()
