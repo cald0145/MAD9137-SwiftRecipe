@@ -29,4 +29,12 @@ class RecipeViewModel: ObservableObject {
     func deleteRecipe(at offsets: IndexSet) {
         recipes.remove(atOffsets: offsets)
     }
+
+    func updateRecipe(_ updatedRecipe: Recipe) {
+        // finding index of the recipe with matching id
+        if let index = recipes.firstIndex(where: { $0.id == updatedRecipe.id }) {
+            // replacing old recipe with updated one
+            recipes[index] = updatedRecipe
+        }
+    }
 }

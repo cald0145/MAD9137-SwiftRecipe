@@ -1,96 +1,103 @@
 //
-//  AddRecipeView.swift
+//  EditRecipeView.swift
 //  SwiftRecipe
 //
-//  Created by Jay Calderon on 2024-10-25.
+//  Created by Jay Calderon on 2024-10-29.
 //
+
 import SwiftUI
 
-// form interface with fields
-struct AddRecipeView: View {
-    // env var to dimiss view
+// view with a form interface to edit exisitng recipe
+// pre filled recipe data
+struct EditRecipeView: View {
+    // enviro variable to dismiss view when done
     @Environment(\.dismiss) var dismiss
-    // observed object since changing the recipes,
+    
+    // reference to view model for updating recipe
     @ObservedObject var viewModel: RecipeViewModel
-
-    // variables to store input for new recipe, adding temp vars
-    @State private var title = ""
-    @State private var description = ""
+    
+    // store original recipe for ref
+    let recipe: Recipe
+    
+    // state var hold the edited recipe
+    // init with existing recipe data
+    @State private var id: UUID
+    @State private var title: String
+    @State private var description: String
     @State private var currentIngredient = ""
     @State private var currentStep = ""
-    @State private var ingredients: [String] = []
-    @State private var steps: [String] = []
+    @State private var ingredients: [String]
+    @State private var steps: [String]
     
-    // var for alert
-    @State private var showingValidationAlert = false
-    @State private var validationMessage = ""
+    // initialing state variables with existing recipe data
+    init(recipe: Recipe, viewModel: RecipeViewModel) {
+        self.recipe = recipe
+        self.viewModel = viewModel
+        
+        // initialize state properties with recipe values
+        _title = State(initialValue: recipe.title)
+        _description = State(initialValue: recipe.description)
+        _ingredients = State(initialValue: recipe.ingredients)
+        _steps = State(initialValue: recipe.steps)
+    }
     
     var body: some View {
-        // nav bar with the save cancel btns
         NavigationStack {
             Form {
-                // form is scrollable and sections everything
+                // recipe details section
                 Section(header: Text("Recipe Details")) {
                     TextField("Title", text: $title)
                     TextField("Description", text: $description)
                 }
-
+                
+                // ingredients section
                 Section(header: Text("Ingredients")) {
                     HStack {
-                        TextField("Add Ingredients (e.g. 1 cup of flour...)", text: $currentIngredient)
+                        TextField("Add Ingredient", text: $currentIngredient)
+                        
                         Button(action: addIngredient) {
                             Image(systemName: "plus.circle.fill")
                         }
-                        // btn disabled if field is empty
                         .disabled(currentIngredient.isEmpty)
                     }
                     
-                    // list of added ingredients with delete ability
                     ForEach(ingredients, id: \.self) { ingredient in
                         Text(ingredient)
                     }
                     .onDelete(perform: deleteIngredient)
                 }
                 
+                // steps section
                 Section(header: Text("Steps")) {
-                    // same layout as ingredients
                     HStack {
-                        TextField("Add Step (e.g. mix everything...)", text: $currentStep)
-
+                        TextField("Add Step", text: $currentStep)
+                        
                         Button(action: addStep) {
                             Image(systemName: "plus.circle.fill")
                         }
                         .disabled(currentStep.isEmpty)
                     }
+                    
                     ForEach(steps, id: \.self) { step in
                         Text(step)
                     }
                     .onDelete(perform: deleteStep)
                 }
             }
-            .navigationTitle("Add Recipe")
+            .navigationTitle("Edit Recipe")
             .toolbar {
-                // cancel button closes the form without saving
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
                         dismiss()
                     }
                 }
                 
-                // save btn!!!
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         saveRecipe()
                     }
-                    // no save if the fields are empty
                     .disabled(!isValidRecipe)
                 }
-            }
-            // alert
-            .alert("Cannot Save Recipe", isPresented: $showingValidationAlert) {
-                Button("Ok", role: .cancel) {}
-            } message: {
-                Text(validationMessage)
             }
         }
     }
@@ -100,53 +107,48 @@ struct AddRecipeView: View {
         !title.isEmpty && !ingredients.isEmpty && !steps.isEmpty
     }
     
-    // adding the current ingredient to the ingredients array
+    // new ingredient to the list
     private func addIngredient() {
-        // trimming whitespace and checking if ingredient is not empty
         let trimmedIngredient = currentIngredient.trimmingCharacters(in: .whitespaces)
         guard !trimmedIngredient.isEmpty else { return }
-        // add ingredient and clear field
+        
         ingredients.append(trimmedIngredient)
         currentIngredient = ""
     }
     
-    // adding steps, same as ingredients
+    // add new step to list
     private func addStep() {
         let trimmedStep = currentStep.trimmingCharacters(in: .whitespaces)
         guard !trimmedStep.isEmpty else { return }
+        
         steps.append(trimmedStep)
         currentStep = ""
     }
     
-    // removing ingredients at specified indices
+    // remove ingredients
     private func deleteIngredient(at offsets: IndexSet) {
         ingredients.remove(atOffsets: offsets)
     }
-
-    // removes steps
+    
+    // remove steps
     private func deleteStep(at offsets: IndexSet) {
         steps.remove(atOffsets: offsets)
     }
     
-    // save the recipe and dismiss the view
+    // save the edited recipe
     private func saveRecipe() {
-        // create and add the new recipe
-        let recipe = Recipe(
+        // creating updated recipe with new data
+        let updatedRecipe = Recipe(
+            id: recipe.id,
             title: title,
             description: description,
             ingredients: ingredients,
             steps: steps,
-            date: Date()
+            date: recipe.date
         )
         
-        // add to view model and dismiss the sheet
-        viewModel.addRecipe(recipe)
+        // update recipe in the view model
+        viewModel.updateRecipe(updatedRecipe)
         dismiss()
-    }
-}
-
-struct AddRecipeView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddRecipeView(viewModel: RecipeViewModel())
     }
 }

@@ -15,6 +15,8 @@ struct RecipeDetailView: View {
     @ObservedObject var viewModel: RecipeViewModel
     // state var for delete confirm alert visibility,
     @State private var showingDeleteAlert = false
+    // state var for edit sheet visibility
+    @State private var showingEditSheet = false
 
     var body: some View {
         // scrollview extends scroll past screen size
@@ -64,16 +66,27 @@ struct RecipeDetailView: View {
         .toolbar {
             // adding the delete btn to the nav bar using toolbar
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    // tapping trash button triggers the confirm modal
-                    showingDeleteAlert = true
-                }) {
-                    Image(systemName: "trash")
-                        .foregroundColor(.red)
+                HStack {
+                    Button(action: {
+                        showingEditSheet = true
+                    }) {
+                        Text("Edit")
+                    }
+
+                    Button(action: {
+                        // tapping trash button triggers confirm modal
+                        showingDeleteAlert = true
+                    }) {
+                        Image(systemName: "trash")
+                            .foregroundColor(.red)
+                    }
                 }
             }
         }
-
+        // sheet for editing recipe
+        .sheet(isPresented: $showingEditSheet) {
+            EditRecipeView(recipe: recipe, viewModel: viewModel)
+        }
         // modal when showdelete alert is true, button is destructive red
         // finding the recipe in the view models array
         .alert("Want to delete this recipe?", isPresented: $showingDeleteAlert) {
@@ -93,7 +106,7 @@ struct RecipeDetailView: View {
 // warpping the view in the nav view to see
 struct RecipeDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             RecipeDetailView(
                 recipe: Recipe.testRecipe(),
                 viewModel: RecipeViewModel()

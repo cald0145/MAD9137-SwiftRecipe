@@ -16,7 +16,7 @@ struct ContentView: View {
 
     var body: some View {
         // navigation bar
-        NavigationView {
+        NavigationStack {
             // scroll list with for each to iterate over all recipes,
             // zstack for message behind list layer
             ZStack {
@@ -69,7 +69,8 @@ struct ContentView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     // add recipe button function
                     Button(action: {
-                        showingAddRecipe = true
+                        //change to toggle
+                        showingAddRecipe.toggle()
                     }) {
                         Image(systemName: "plus")
                     }
