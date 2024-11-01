@@ -26,7 +26,7 @@ struct ContentView: View {
                     VStack(spacing: 10) {
                         Image(systemName: "fork.knife.circle.fill")
                             .font(.system(size: 70))
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                             .symbolRenderingMode(.hierarchical) // depth?
 
                         Text("No Recipes Yet :(")
