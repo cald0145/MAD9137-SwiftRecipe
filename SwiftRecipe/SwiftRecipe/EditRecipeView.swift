@@ -19,7 +19,7 @@ struct EditRecipeView: View {
     // store original recipe for ref
     let recipe: Recipe
     
-    // state var hold the edited recipe
+    // remmeber: state var hold the edited recipe
     // init with existing recipe data
     @State private var title: String
     @State private var description: String
@@ -101,7 +101,7 @@ struct EditRecipeView: View {
         }
     }
     
-    // computed property to check if the recipe has all required fields
+    // NOTE: computed property to check if the recipe has all required fields
     private var isValidRecipe: Bool {
         !title.isEmpty && !ingredients.isEmpty && !steps.isEmpty
     }

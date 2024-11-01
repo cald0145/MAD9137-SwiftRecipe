@@ -12,10 +12,27 @@ class RecipeViewModel: ObservableObject {
     // published property wrapper automatically updates the ui when the recipes array changes
     // array stores all recipes in the app
     @Published var recipes: [Recipe] = []
+    // property for search text
+    @Published var searchText: String = ""
 
-    // init sets up state of the view model
-    // adding test recipe grilled cheese :^)
+    // :^)
 
+    // computed property returns filtered recipes
+    // auto update when searchtext or recipes change
+    var filteredRecipes: [Recipe] {
+        guard !searchText.isEmpty else {
+            return recipes // return all recipes if no search text!!
+        }
+
+        return recipes.filter { recipe in
+            // checking if search text matches title or description and if any ingredient contains the search text
+            recipe.title.localizedCaseInsensitiveContains(searchText) ||
+                recipe.description.localizedCaseInsensitiveContains(searchText) ||
+                recipe.ingredients.contains(where: {
+                    $0.localizedCaseInsensitiveContains(searchText)
+                })
+        }
+    }
 
     // WIP, adds new recipe parameter
     func addRecipe(_ recipe: Recipe) {
